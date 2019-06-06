@@ -83,7 +83,8 @@ app.post("/api/getuserList", (req, res) =>{
 	"commissionAmount,commissionStatus,commissionDate,netRevenue," +
 	"pipelineType,invoiceType,invoiceNo,gst,billingAmount," +
 	"invoiceAmount,orderBookAmount,orderBookDate,revenueRealizationDate,revenueAmount," +
-	"createdDate,updatedDate" +
+	"createdDate,updatedDate," +
+	"UserId,UserGroup" +
 	 ") VALUES ('" + 
 	 req.body.title + "','" + req.body.firstName + "','" + req.body.lastName + "','" + req.body.gender + "','" + 
 	 req.body.ethnicity + "','" + req.body.citizenship + "','"+ req.body.workStatus + "','"+ req.body.source + "','" +
@@ -97,11 +98,18 @@ app.post("/api/getuserList", (req, res) =>{
 	 req.body.commissionAmount + "','" + req.body.commissionStatus + "','" + req.body.commissionDate + "','" + req.body.netRevenue + "','" + 
 	 req.body.pipelineType + "','" + req.body.invoiceType + "','"+ req.body.invoiceNo + "','"+ req.body.gst + "','" + req.body.billingAmount + "','" +
 	 req.body.invoiceAmount + "','" + req.body.orderBookAmount + "','"+ req.body.orderBookDate + "','"+ req.body.revenueRealizationDate + "','" + req.body.revenueAmount + "','" +
-	 req.body.createdDate + "','" + req.body.updatedDate + 
+	 req.body.createdDate + "','" + req.body.updatedDate + "','" +
+	 req.body.UserId + "','" + req.body.UserGroup + 
 	 "')";
 
 	 console.log(query);
 	executeQuery (res, query);
+});
+
+
+app.post("/api/getDetails", (req, res) =>{
+	var query = "SELECT * from [Details] WHERE [UserGroup] ='" + req.body.UserGroup + "' AND [UserId]='" + req.body.UserId + "';";
+	executeQuery(res, query);
 });
 
 //PUT API
