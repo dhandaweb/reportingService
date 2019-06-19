@@ -22,7 +22,7 @@ app.use(function (req, res, next) {
     console.log("App now running on port", port);
  });
 
-//Initiallising connection string
+
 var dbConfig = {
     user:  "sa",
     password: "dhanda@123",
@@ -32,6 +32,16 @@ var dbConfig = {
         encrypt: false
     }
 };
+
+// var dbConfig = {
+//     user:  "reporting",
+//     password: "dhanda@123",
+//     server: "reportingdatababse.database.windows.net",
+// 	database: "Reporting",
+// 	options: {           
+// 		        encrypt: true
+// 		    }
+// };
 
 //Function to connect to database and execute query
 var  executeQuery = function(res, query){	
@@ -106,20 +116,108 @@ app.post("/api/getuserList", (req, res) =>{
 	executeQuery (res, query);
 });
 
+app.post("/api/updateDetails", function(req , res){
+	var query = "UPDATE [Details] SET "+
+	"title = '" + req.body.title + "' ,"+
+	"firstName = '" + req.body.firstName + "' ,"+
+	"lastName = '" + req.body.lastName + "' ,"+
+	"gender = '" + req.body.gender + "' ,"+
+	"ethnicity = '" + req.body.ethnicity + "' ,"+
+	"citizenship = '" + req.body.citizenship + "' ,"+
+	"workStatus = '" + req.body.workStatus + "' ,"+
+	"source = '" + req.body.source + "' ,"+
+	"currentEmployer = '" + req.body.currentEmployer + "' ,"+
+	"primarySkill = '" + req.body.primarySkill + "' ,"+
+	"salaryMin = '" + req.body.salaryMin + "' ,"+
+	"salaryMax = '" + req.body.salaryMax + "' ,"+
+	"workExpMin = '" + req.body.workExpMin + "' ,"+
+	"workExpMax = '" + req.body.workExpMax + "' ,"+
+	"address = '" + req.body.address + "' ,"+
+	"city = '" + req.body.city + "' ,"+
+	"state = '" + req.body.state + "' ,"+
+	"country = '" + req.body.country + "' ,"+
+	"client = '" + req.body.client + "' ,"+
+	"hiringManager = '" + req.body.hiringManager + "' ,"+
+	"jobTitle = '" + req.body.jobTitle + "' ,"+
+	"jobType = '" + req.body.jobType + "' ,"+
+	"jobCategory = '" + req.body.jobCategory + "' ,"+
+	"jobAddress = '" + req.body.title + "' ,"+
+	"jobCity = '" + req.body.title + "' ,"+
+	"jobState = '" + req.body.title + "' ,"+
+	"jobCountry = '" + req.body.title + "' ,"+
+	"offerStatus = '" + req.body.offerStatus + "' ,"+
+	"jobOpenedDate = '" + req.body.jobOpenedDate + "' ,"+
+	"cvSubmissionDate = '" + req.body.cvSubmissionDate + "' ,"+
+	"offerDate = '" + req.body.offerDate + "' ,"+
+	"joiningDate = '" + req.body.joiningDate + "' ,"+
+	"recruiter = '" + req.body.recruiter + "' ,"+
+	"cre = '" + req.body.cre + "' ,"+
+	"accountManager = '" + req.body.accountManager + "' ,"+
+	"accountDirector = '" + req.body.accountDirector + "' ,"+
+	"countryManager = '" + req.body.countryManager + "' ,"+
+	"team = '" + req.body.team + "' ,"+
+	"geo = '" + req.body.geo + "' ,"+
+	"commissionAmount = '" + req.body.commissionAmount + "' ,"+
+	"commissionStatus = '" + req.body.commissionStatus + "' ,"+
+	"commissionDate = '" + req.body.commissionDate + "' ,"+
+	"netRevenue = '" + req.body.netRevenue + "' ,"+
+	"pipelineType = '" + req.body.pipelineType + "' ,"+
+	"invoiceType = '" + req.body.invoiceType + "' ,"+
+	"invoiceNo = '" + req.body.invoiceNo + "' ,"+
+	"gst = '" + req.body.gst + "' ,"+
+	"invoiceAmount = '" + req.body.invoiceAmount + "' ,"+
+	"orderBookAmount = '" + req.body.orderBookAmount + "' ,"+
+	"orderBookDate = '" + req.body.orderBookDate + "' ,"+
+	"revenueRealizationDate = '" + req.body.revenueRealizationDate + "' ,"+
+	"revenueAmount = '" + req.body.revenueAmount + "' ,"+
+	"updatedDate = '" + req.body.updatedDate + "'"+
+	"WHERE [UserGroup] ='" + req.body.UserGroup + "' AND [UserId]='" + req.body.UserId + "' AND [Id]="+  req.body.ID +";";
+
+	 console.log(query);
+	executeQuery (res, query);
+});
 
 app.post("/api/getDetails", (req, res) =>{
-	var query = "SELECT * from [Details] WHERE [UserGroup] ='" + req.body.UserGroup + "' AND [UserId]='" + req.body.UserId + "';";
+	var query = "SELECT * from [Details] WHERE [UserGroup] ='" + req.body.UserGroup + "' AND [UserId]='" + req.body.UserId + "' ORDER BY ID DESC;";
+	executeQuery(res, query);
+});
+
+app.post("/api/deleteDetails", (req, res) =>{
+	var query = "DELETE from [Details] WHERE [UserGroup] ='" + req.body.UserGroup + "' AND [UserId]='" + req.body.UserId + "' AND [Id]="+  req.body.id +";";
 	executeQuery(res, query);
 });
 
 //PUT API
- app.put("/api/user/:id", function(req , res){
-	var query = "UPDATE [user] SET Name= " + req.body.Name  +  " , Email=  " + req.body.Email + "  WHERE Id= " + req.params.id;
-	executeQuery (res, query);
+//  app.put("/api/user/:id", function(req , res){
+// 	var query = "UPDATE [user] SET Name= " + req.body.Name  +  " , Email=  " + req.body.Email + "  WHERE Id= " + req.params.id;
+// 	executeQuery (res, query);
+// });
+
+// // DELETE API
+//  app.delete("/api/user/:id", function(req , res){
+// 	var query = "DELETE FROM [user] WHERE Id=" + req.params.id;
+// 	executeQuery (res, query);
+// });
+
+
+app.post("/api/addOption", (req, res) =>{
+	var query = "INSERT INTO " + req.body.tableName + " (sortId, label) VALUES (" + req.body.sortId + ", '"  + req.body.label + "')";
+	executeQuery(res, query);
 });
 
-// DELETE API
- app.delete("/api/user/:id", function(req , res){
-	var query = "DELETE FROM [user] WHERE Id=" + req.params.id;
-	executeQuery (res, query);
+app.post("/api/getOption", (req, res) =>{
+	var query = "SELECT * from [" + req.body.tableName  + "];";
+	executeQuery(res, query);
+});
+
+app.post("/api/deleteOption", (req, res) =>{
+	var query = "DELETE FROM [" + req.body.tableName  + "] where id= " + req.body.id+ ";";
+	console.log(query);
+	executeQuery(res, query);
+});
+
+app.post("/api/updateOption", (req, res) =>{
+	var query = "Update [" + req.body.tableName  + "] set label = '" + req.body.label + "' where id= " + req.body.id+";";
+	console.log(query);
+	executeQuery(res, query);
 });
