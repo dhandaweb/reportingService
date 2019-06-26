@@ -67,7 +67,7 @@ var  executeQuery = function(res, query){
 	});	
 }
 
-app.get('/', (req, res) => res.send('Hello World!'))
+app.get('/api/hello', (req, res) => res.send('Hello World!'))
 
 app.post("/api/finduser", (req, res) =>{
 	var query = "SELECT * from [Users] WHERE [UserName] ='" + req.body.username + "' AND [Password]='" + req.body.password + "';";
@@ -75,7 +75,7 @@ app.post("/api/finduser", (req, res) =>{
 });
 
 app.post("/api/getuserList", (req, res) =>{
-	var query = "SELECT * from [Users] WHERE [UserGroup] ='" + req.body.usergroup + "';";
+	var query = "SELECT * from [Users] WHERE [GroupId] ='" + req.body.GroupId + "';";
 	executeQuery(res, query);
 });
 
@@ -141,10 +141,10 @@ app.post("/api/updateDetails", function(req , res){
 	"jobTitle = '" + req.body.jobTitle + "' ,"+
 	"jobType = '" + req.body.jobType + "' ,"+
 	"jobCategory = '" + req.body.jobCategory + "' ,"+
-	"jobAddress = '" + req.body.title + "' ,"+
-	"jobCity = '" + req.body.title + "' ,"+
-	"jobState = '" + req.body.title + "' ,"+
-	"jobCountry = '" + req.body.title + "' ,"+
+	"jobAddress = '" + req.body.jobAddress + "' ,"+
+	"jobCity = '" + req.body.jobCity + "' ,"+
+	"jobState = '" + req.body.jobState + "' ,"+
+	"jobCountry = '" + req.body.jobCountry + "' ,"+
 	"offerStatus = '" + req.body.offerStatus + "' ,"+
 	"jobOpenedDate = '" + req.body.jobOpenedDate + "' ,"+
 	"cvSubmissionDate = '" + req.body.cvSubmissionDate + "' ,"+
@@ -206,7 +206,7 @@ app.post("/api/addOption", (req, res) =>{
 });
 
 app.post("/api/getOption", (req, res) =>{
-	var query = "SELECT * from [" + req.body.tableName  + "];";
+	var query = "SELECT * from [" + req.body.tableName  + "]" + " ORDER BY id DESC;";
 	executeQuery(res, query);
 });
 
