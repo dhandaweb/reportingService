@@ -23,25 +23,25 @@ app.use(function (req, res, next) {
  });
 
 
-var dbConfig = {
-    user:  "sa",
-    password: "dhanda@123",
-    server: "LTNBN5CG6223WGN",
-	database: "Reporting",
-	options: {           
-        encrypt: false
-    }
-};
-
 // var dbConfig = {
-//     user:  "reporting",
+//     user:  "sa",
 //     password: "dhanda@123",
-//     server: "reportingdatababse.database.windows.net",
+//     server: "LTNBN5CG6223WGN",
 // 	database: "Reporting",
 // 	options: {           
-// 		        encrypt: true
-// 		    }
+//         encrypt: false
+//     }
 // };
+
+var dbConfig = {
+    user:  "reporting",
+    password: "dhanda@123",
+    server: "reportingdatababse.database.windows.net",
+	database: "Reporting",
+	options: {           
+		        encrypt: true
+		    }
+};
 
 //Function to connect to database and execute query
 var  executeQuery = function(res, query){	
@@ -70,18 +70,29 @@ var  executeQuery = function(res, query){
 app.get('/api/hello', (req, res) => res.send('Hello World!'))
 
 app.post("/api/finduser", (req, res) =>{
-	var query = "SELECT * from [Users] WHERE [UserName] ='" + req.body.username + "' AND [Password]='" + req.body.password + "';";
+	var query = "SELECT * from [Users] WHERE [userName] ='" + req.body.userName + "' AND [Password]='" + req.body.password + "';";
 	executeQuery(res, query);
 });
 
-app.post("/api/getuserList", (req, res) =>{
-	var query = "SELECT * from [Users] WHERE [GroupId] ='" + req.body.GroupId + "';";
+app.post("/api/adduser", (req, res) =>{
+	var query = "INSERT INTO [Users] (firstName,lastName,groupId,role,userName,password,accountStatus) VALUES ('"+
+	 req.body.firstName + "','" + req.body.lastName + "','" + req.body.groupId + "','" + req.body.role + "','" + req.body.userName + "','" + req.body.password + "','"+ req.body.accountStatus + "')";
 	executeQuery(res, query);
 });
+app.post("/api/getuserList", (req, res) =>{
+	var query = "SELECT * from [users] WHERE [groupId] ='" + req.body.groupId + "' AND [accountStatus]='1';";
+	executeQuery(res, query);
+});
+
+app.post("/api/inActiveUser", (req, res) =>{
+	var query = "UPDATE [Users] SET accountStatus = 0 where id =  "+ req.body.id + ";";
+	executeQuery(res, query);
+});
+
 
 //POST API
  app.post("/api/addDetails", function(req , res){
-	var query = "INSERT INTO [Details] (title,firstName,lastName,gender,"+
+	var query = "INSERT INTO [candidates] (title,firstName,lastName,gender,"+
 	"ethnicity,citizenship,workStatus,source," +
 	"currentEmployer,primarySkill,salaryMin,salaryMax,workExpMin,workExpMax," +
 	"address,city,state,country," +
@@ -94,7 +105,7 @@ app.post("/api/getuserList", (req, res) =>{
 	"pipelineType,invoiceType,invoiceNo,gst,billingAmount," +
 	"invoiceAmount,orderBookAmount,orderBookDate,revenueRealizationDate,revenueAmount," +
 	"createdDate,updatedDate," +
-	"UserId,UserGroup" +
+	"userId,userGroupId" +
 	 ") VALUES ('" + 
 	 req.body.title + "','" + req.body.firstName + "','" + req.body.lastName + "','" + req.body.gender + "','" + 
 	 req.body.ethnicity + "','" + req.body.citizenship + "','"+ req.body.workStatus + "','"+ req.body.source + "','" +
@@ -109,7 +120,7 @@ app.post("/api/getuserList", (req, res) =>{
 	 req.body.pipelineType + "','" + req.body.invoiceType + "','"+ req.body.invoiceNo + "','"+ req.body.gst + "','" + req.body.billingAmount + "','" +
 	 req.body.invoiceAmount + "','" + req.body.orderBookAmount + "','"+ req.body.orderBookDate + "','"+ req.body.revenueRealizationDate + "','" + req.body.revenueAmount + "','" +
 	 req.body.createdDate + "','" + req.body.updatedDate + "','" +
-	 req.body.UserId + "','" + req.body.UserGroup + 
+	 req.body.userId + "','" + req.body.userGroupId + 
 	 "')";
 
 	 console.log(query);
@@ -117,7 +128,7 @@ app.post("/api/getuserList", (req, res) =>{
 });
 
 app.post("/api/updateDetails", function(req , res){
-	var query = "UPDATE [Details] SET "+
+	var query = "UPDATE [candidates] SET "+
 	"title = '" + req.body.title + "' ,"+
 	"firstName = '" + req.body.firstName + "' ,"+
 	"lastName = '" + req.body.lastName + "' ,"+
@@ -171,19 +182,19 @@ app.post("/api/updateDetails", function(req , res){
 	"revenueRealizationDate = '" + req.body.revenueRealizationDate + "' ,"+
 	"revenueAmount = '" + req.body.revenueAmount + "' ,"+
 	"updatedDate = '" + req.body.updatedDate + "'"+
-	"WHERE [UserGroup] ='" + req.body.UserGroup + "' AND [UserId]='" + req.body.UserId + "' AND [Id]="+  req.body.ID +";";
+	"WHERE [userGroupId] ='" + req.body.userGroupId + "' AND [userId]='" + req.body.userId + "' AND [id]="+  req.body.id +";";
 
 	 console.log(query);
 	executeQuery (res, query);
 });
 
 app.post("/api/getDetails", (req, res) =>{
-	var query = "SELECT * from [Details] WHERE [UserGroup] ='" + req.body.UserGroup + "' AND [UserId]='" + req.body.UserId + "' ORDER BY ID DESC;";
+	var query = "SELECT * from [candidates] WHERE [userGroupId] ='" + req.body.userGroupId + "' AND [userId]='" + req.body.userId + "' ORDER BY ID DESC;";
 	executeQuery(res, query);
 });
 
 app.post("/api/deleteDetails", (req, res) =>{
-	var query = "DELETE from [Details] WHERE [UserGroup] ='" + req.body.UserGroup + "' AND [UserId]='" + req.body.UserId + "' AND [Id]="+  req.body.id +";";
+	var query = "DELETE from [candidates] WHERE [userGroupId] ='" + req.body.userGroupId + "' AND [userId]='" + req.body.userId + "' AND [id]="+  req.body.id +";";
 	executeQuery(res, query);
 });
 
