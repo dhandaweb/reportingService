@@ -23,25 +23,25 @@ app.use(function (req, res, next) {
  });
 
 
-// var dbConfig = {
-//     user:  "sa",
-//     password: "dhanda@123",
-//     server: "LTNBN5CG6223WGN",
-// 	database: "Reporting",
-// 	options: {           
-//         encrypt: false
-//     }
-// };
-
 var dbConfig = {
-    user:  "reporting",
+    user:  "sa",
     password: "dhanda@123",
-    server: "reportingdatababse.database.windows.net",
+    server: "LTNBN5CG6223WGN",
 	database: "Reporting",
 	options: {           
-		        encrypt: true
-		    }
+        encrypt: false
+    }
 };
+
+// var dbConfig = {
+//     user:  "reporting",
+//     password: "dhanda@123",
+//     server: "reportingdatababse.database.windows.net",
+// 	database: "Reporting",
+// 	options: {           
+// 		        encrypt: true
+// 		    }
+// };
 
 //Function to connect to database and execute query
 var  executeQuery = function(res, query){	
@@ -70,12 +70,12 @@ var  executeQuery = function(res, query){
 app.get('/api/hello', (req, res) => res.send('Hello World!'))
 
 app.post("/api/finduser", (req, res) =>{
-	var query = "SELECT * from [Users] WHERE [userName] ='" + req.body.userName + "' AND [Password]='" + req.body.password + "';";
+	var query = "SELECT * from [users] WHERE [userName] ='" + req.body.userName + "' AND [password]='" + req.body.password + "';";
 	executeQuery(res, query);
 });
 
 app.post("/api/adduser", (req, res) =>{
-	var query = "INSERT INTO [Users] (firstName,lastName,groupId,role,userName,password,accountStatus) VALUES ('"+
+	var query = "INSERT INTO [users] (firstName,lastName,groupId,role,userName,password,accountStatus) VALUES ('"+
 	 req.body.firstName + "','" + req.body.lastName + "','" + req.body.groupId + "','" + req.body.role + "','" + req.body.userName + "','" + req.body.password + "','"+ req.body.accountStatus + "')";
 	executeQuery(res, query);
 });
@@ -85,7 +85,7 @@ app.post("/api/getuserList", (req, res) =>{
 });
 
 app.post("/api/inActiveUser", (req, res) =>{
-	var query = "UPDATE [Users] SET accountStatus = 0 where id =  "+ req.body.id + ";";
+	var query = "UPDATE [users] SET accountStatus = 0 where id =  "+ req.body.id + ";";
 	executeQuery(res, query);
 });
 
@@ -194,7 +194,7 @@ app.post("/api/getDetails", (req, res) =>{
 });
 
 app.post("/api/deleteDetails", (req, res) =>{
-	var query = "DELETE from [candidates] WHERE [userGroupId] ='" + req.body.userGroupId + "' AND [userId]='" + req.body.userId + "' AND [id]="+  req.body.id +";";
+	var query = "DELETE from [candidates] WHERE [userGroupId] ='" + req.body.userGroupId + "' AND [userId]='" + req.body.userId + "' AND [id]='"+  req.body.id +"';";
 	executeQuery(res, query);
 });
 
@@ -229,6 +229,54 @@ app.post("/api/deleteOption", (req, res) =>{
 
 app.post("/api/updateOption", (req, res) =>{
 	var query = "Update [" + req.body.tableName  + "] set label = '" + req.body.label + "' where id= " + req.body.id+";";
+	console.log(query);
+	executeQuery(res, query);
+});
+
+
+app.post("/api/getClientList", (req, res) =>{
+	var query = "SELECT * from [clients] where userGroupId= " + req.body.userGroupId+ " ORDER BY id DESC;";
+	executeQuery(res, query);
+});
+
+app.post("/api/addClient", (req, res) =>{
+	var query = "INSERT INTO [clients] (name, description,userGroupId,status) VALUES ('" + req.body.name + "', '"  + req.body.description + "', '"  + req.body.userGroupId + "', "  + req.body.status + ")";
+	console.log(query);
+	executeQuery(res, query);
+});
+
+app.post("/api/addHiringManager", (req, res) =>{
+	var query = "INSERT INTO [hiringManagerList] (name, client,status) VALUES ('" + req.body.name + "', "  + req.body.client + ", "  + req.body.status + ")";
+	console.log(query);
+	executeQuery(res, query);
+});
+
+app.post("/api/getHiringManagerList", (req, res) =>{
+	var query = "SELECT * from [hiringManagerList]  where client= " + req.body.client+ " ORDER BY id DESC;";
+	console.log(query);
+	executeQuery(res, query);
+});
+
+app.post("/api/deleteHiringManager", (req, res) =>{
+	var query = "DELETE FROM [hiringManagerList]  where id= " + req.body.id+ ";";
+	console.log(query);
+	executeQuery(res, query);
+});
+
+app.post("/api/updateHiringManager", (req, res) =>{
+	var query = "Update [hiringManagerList] set name = '" + req.body.name + "' where id= " + req.body.id+ ";";
+	console.log(query);
+	executeQuery(res, query);
+});
+
+app.post("/api/deleteHiringManagerbyClient", (req, res) =>{
+	var query = "DELETE FROM [hiringManagerList]  where client= " + req.body.id+ ";";
+	console.log(query);
+	executeQuery(res, query);
+});
+
+app.post("/api/deleteClient", (req, res) =>{
+	var query = "DELETE FROM [clients]  where id= " + req.body.id+ ";";
 	console.log(query);
 	executeQuery(res, query);
 });
