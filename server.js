@@ -57,7 +57,7 @@ var  executeQuery = function(res, query){
 			request.query(query, function (err, response) {
 				if (err) {
 					console.log("Error while querying database :- " + err);
-					res.send(err);
+					res.status(500).send(err);
 				}
 				else {
 					res.send(response);
@@ -93,7 +93,7 @@ app.post("/api/inActiveUser", (req, res) =>{
 //POST API
  app.post("/api/addDetails", function(req , res){
 	var query = "INSERT INTO [candidates] (title,firstName,lastName,gender,"+
-	"ethnicity,citizenship,workStatus,source," +
+	"ethnicity,citizenship,workStatus,source,candidateStatus," +
 	"currentEmployer,primarySkill,salaryMin,salaryMax,workExpMin,workExpMax," +
 	"address,city,state,country," +
 	"client,hiringManager,jobTitle,jobType,jobCategory," +
@@ -108,7 +108,7 @@ app.post("/api/inActiveUser", (req, res) =>{
 	"userId,userGroupId" +
 	 ") VALUES ('" + 
 	 req.body.title + "','" + req.body.firstName + "','" + req.body.lastName + "','" + req.body.gender + "','" + 
-	 req.body.ethnicity + "','" + req.body.citizenship + "','"+ req.body.workStatus + "','"+ req.body.source + "','" +
+	 req.body.ethnicity + "','" + req.body.citizenship + "','"+ req.body.workStatus + "','"+ req.body.source + "','" + req.body.candidateStatus + "','" +
 	 req.body.currentEmployer + "','" + req.body.primarySkill + "','"+ req.body.salaryMin + "','"+ req.body.salaryMax + "','" + req.body.workExpMin + "','"+ req.body.workExpMax + "','" +
 	 req.body.address + "','" + req.body.city + "','"+ req.body.state + "','"+ req.body.country + "','" +
 	 req.body.client + "','" + req.body.hiringManager + "','"+ req.body.jobTitle + "','"+ req.body.jobType + "','" + req.body.jobCategory + "','" +
@@ -137,6 +137,7 @@ app.post("/api/updateDetails", function(req , res){
 	"citizenship = '" + req.body.citizenship + "' ,"+
 	"workStatus = '" + req.body.workStatus + "' ,"+
 	"source = '" + req.body.source + "' ,"+
+	"candidateStatus = '" + req.body.candidateStatus + "' ,"+
 	"currentEmployer = '" + req.body.currentEmployer + "' ,"+
 	"primarySkill = '" + req.body.primarySkill + "' ,"+
 	"salaryMin = '" + req.body.salaryMin + "' ,"+
