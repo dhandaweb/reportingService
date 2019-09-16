@@ -23,15 +23,15 @@ app.use(function (req, res, next) {
  });
 
 
-var dbConfig = {
-    user:  "sa",
-    password: "dhanda@123",
-    server: "LTNBN5CG6223WGN",
-	database: "Reporting",
-	options: {           
-        encrypt: false
-    }
-};
+// var dbConfig = {
+//     user:  "sa",
+//     password: "dhanda@123",
+//     server: "LTNBN5CG6223WGN",
+// 	database: "Reporting",
+// 	options: {           
+//         encrypt: false
+//     }
+// };
 
 // var dbConfig = {
 //     user:  "reporting",
@@ -42,6 +42,26 @@ var dbConfig = {
 // 		        encrypt: true
 // 		    }
 // };
+
+// var dbConfig = {
+//     user:  "tracoplug",
+//     password: "dhanda@123",
+//     server: "tracoplug.database.windows.net",
+// 	database: "tracoplug",
+// 	options: {           
+// 		        encrypt: true
+// 		    }
+// };
+
+var dbConfig = {
+    user:  "DB_A4DC07_tracoplug_admin",
+    password: "dhanda123",
+    server: "sql5045.site4now.net",
+	database: "DB_A4DC07_tracoplug",
+	options: {           
+		        encrypt: true
+		    }
+};
 
 //Function to connect to database and execute query
 var  executeQuery = function(res, query){	
@@ -81,6 +101,11 @@ app.post("/api/adduser", (req, res) =>{
 });
 app.post("/api/getuserList", (req, res) =>{
 	var query = "SELECT * from [users] WHERE [groupId] ='" + req.body.groupId + "' AND [accountStatus]='1';";
+	executeQuery(res, query);
+});
+
+app.get("/api/getuserList", (req, res) =>{
+	var query = "SELECT * from [users] WHERE [groupId] ='" + 1 + "' AND [accountStatus]='1';";
 	executeQuery(res, query);
 });
 
